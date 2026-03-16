@@ -1,10 +1,5 @@
 from functools import total_ordering
 
-def get_average_grade(person):
-    if isinstance(person, Student) or isinstance(person, Mentor):
-        all_grades = [grade for sublist in person.grades.values() for grade in sublist]
-        return sum(all_grades) / len(all_grades) if all_grades else 0
-
 @total_ordering
 class Student:
     def __init__(self, name, surname, gender):
@@ -77,7 +72,6 @@ class Lecturer(Mentor):
     def rate_hw(self, student, course, grade):
         print('Lecturer не могут ставить оценки студентам')
         return f'Ошибка'
-  
     
     def __str__(self):
         return f'{super().__str__()}\nСредняя оценка за лекции: {get_average_grade(self):.1f}'
@@ -91,17 +85,22 @@ class Lecturer(Mentor):
         if isinstance(other, Lecturer):
             return get_average_grade(self) > get_average_grade(other)
         return NotImplemented  
-      
+
 
 class Reviewer(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
-        
-    
+
+
 def average_grade_for_course(lst, course_name):
     total_grades = [grade for person in lst for grade in person.grades.get(course_name, [])]
     return sum(total_grades) / len(total_grades) if total_grades else 0       
-    
+
+def get_average_grade(person):
+    if isinstance(person, Student) or isinstance(person, Mentor):
+        all_grades = [grade for sublist in person.grades.values() for grade in sublist]
+        return sum(all_grades) / len(all_grades) if all_grades else 0
+
 lecturer = Lecturer('Иван', 'Иванов')
 reviewer = Reviewer('Петр', 'Петров')
 student = Student('Алехина', 'Ольга', 'Ж')
@@ -121,7 +120,7 @@ some_student.grades['Python'] = [10, 10, 10, 9, 10, 10, 10, 10, 10, 10]
 # 1
 
 def dz_1():
-            
+
     print(isinstance(lecturer, Mentor))
     print(isinstance(reviewer, Mentor))
     print(lecturer.courses_attached)
